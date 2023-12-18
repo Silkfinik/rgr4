@@ -1,0 +1,3 @@
+C:/Users/silkfinik/CLionProjects/rgr4/cmake-build-debug/CMakeFiles/rgr4.dir
+C:/Users/silkfinik/CLionProjects/rgr4/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/silkfinik/CLionProjects/rgr4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
