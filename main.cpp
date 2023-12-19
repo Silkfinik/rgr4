@@ -1,9 +1,9 @@
 #include <iostream>
 #include <map>
+#include <utility>
 #include <vector>
 #include <string>
 #include <fstream>
-
 
 struct SMark{
     std::string subject;
@@ -24,31 +24,36 @@ struct SStudData{
     std::string name;
     int Number;
     std::vector <SMark> Marks;
+    double avg_mark;
+    //int counter;
 
     SStudData(std::string s_name, const int& n, std::string str_copy){
-        name = s_name;
+        name = std::move(s_name);
         Number = n;
-        std::string str = str_copy;
+        std::string str = std::move(str_copy);
+        int sum = 0;
         while(str.find(',') != std::string::npos){
             SMark temp;
             temp.subject = str.substr(0, str.find(' '));
             str.erase(0, str.find(' ') + 1);
             temp.Mark = std::stoi(str.substr(0, str.find(',')));
+            sum += temp.Mark;
             Marks.push_back(temp);
-            str = str.erase(0, str.find(',') + 1);
+            str = str.erase(0, str.find(',') + 2);
         }
-        //Marks.push_back(temp);
+        SMark temp;
+        temp.subject = str.substr(0, str.find(' '));
+        str.erase(0, str.find(' ') + 1);
+        temp.Mark = std::stoi(str.substr(0, str.find(',')));
+        Marks.push_back(temp);
+        avg_mark = sum / double(Marks.size());
     }
 
     SStudData(){
         name = "";
         Number = 0;
-    }
-};
-
-struct comp_by_number {
-    bool operator()(const SStudData& a, const SStudData& b) const {
-        return a.Number < b.Number;
+        avg_mark = 0;
+        //counter = 0;
     }
 };
 
@@ -56,20 +61,18 @@ void read_file(std::map<int, SStudData>& students){
     std::ifstream in("input.txt");
     if(in.is_open()){
         std::string str;
-        int counter = 0;
         while(std::getline(in, str)){
             auto i = str.find(';');
-            auto ri = str.rfind(';');
             std::string temp_num = str.substr(i + 1);
             int num = std::stoi(temp_num.substr(0, temp_num.find(';')));
             SStudData temp(str.substr(0, i), num, str.substr(str.rfind(';') + 1));
-            students[++counter] = temp;
+            students[temp.Number] = temp;
         }
     }
     in.close();
 }
 
-int main(){
+int main() {
     std::map<int, SStudData> students;
     read_file(students);
     std::cout << " ";
