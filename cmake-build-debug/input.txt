@@ -1,4 +1,7 @@
-Minchuk S.V.;124987;Math 5, Dmiml 3, English 6
+Minchuk S.V.;124987;Math 5, Dmiml 5, English 6
 Minchuk S.V.;124986;Math 5, Dmiml 3, English 8
 Minchuk S.V.;124984;Math 5, Dmiml 3, English 10
-Ainchuk S.V.;124999;Math 5, Dmiml 3, English 6
+Ainchuk S.V.;124999;Dmiml 3, English 6
+Ainchuk S.V.;124998;Dmiml 1
+Ainchuk S.V.;124997;English 8
+Ainchuk S.V.;124996;French 10
