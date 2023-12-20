@@ -72,6 +72,7 @@ public:
     void number_of_students_by_subject();
     void avg_mark_by_subject();
     void print_max_sum_marks();
+    void print_dissuasive_marks();
 };
 
 void Journal::read_file(const std::string& file_name){
@@ -201,22 +202,39 @@ void Journal::avg_mark_by_subject(){
 }
 
 void Journal::print_max_sum_marks(){
-    std::map<std::string, int> students_marks;
+    std::map<int, int> students_marks;
     int max = 0;
     for(auto& i : students){
+        int sum = 0;
         for(auto& j : i.second.Marks){
-            students_marks[i.second.name] += j.Mark;
+            students_marks[i.second.Number] += j.Mark;
+            sum += j.Mark;
+        }
+        if(sum > max){
+            max = sum;
         }
     }
-    for(auto& i : students_marks){
-        if(i.second > max){
-            max = i.second;
-        }
-    }
-    std::cout << "Students with max sum (" << max << ") of marks:" << std::endl;
+    std::cout << "Students ind num with max sum (" << max << ") of marks:" << std::endl;
     for (auto& i : students_marks){
         if(i.second == max){
-            std::cout << i.first << std::endl;
+            auto it = students.find(i.first);
+            std::cout << it->second.Number << " " << it->second.name;
+            for(auto& j : it->second.Marks){
+                std::cout << j.subject << " " << j.Mark << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+}
+
+void Journal::print_dissuasive_marks(){
+    for (auto& i : students){
+        for(auto& j : i.second.Marks){
+            if(j.Mark <= 3){
+                std::cout << i.second.Number << " " << i.second.name << " " << j.subject
+                << " " << j.Mark << std::endl;
+                break;
+            }
         }
     }
 }
@@ -237,5 +255,7 @@ int main() {
     group11.avg_mark_by_subject();
     std::cout << std::endl;
     group11.print_max_sum_marks();
+    std::cout << std::endl;
+    group11.print_dissuasive_marks();
     return 0;
 }
