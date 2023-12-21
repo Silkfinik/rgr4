@@ -29,16 +29,16 @@ private:
         std::vector <SMark> Marks;
         double avg_mark;
 
-        SStudData(std::string s_name, const int& n, std::string str_copy){
+        SStudData(std::string s_name, const int& n, std::string str){
             name = std::move(s_name);
             Number = n;
-            std::string str = std::move(str_copy);
             int sum = 0;
             while(str.find(',') != std::string::npos){
                 SMark temp;
                 temp.subject = str.substr(0, str.find(' '));
                 str.erase(0, str.find(' ') + 1);
                 temp.Mark = std::stoi(str.substr(0, str.find(',')));
+                sum += temp.Mark;
                 Marks.push_back(temp);
                 str = str.erase(0, str.find(',') + 2);
             }
@@ -46,10 +46,8 @@ private:
             temp.subject = str.substr(0, str.find(' '));
             str.erase(0, str.find(' ') + 1);
             temp.Mark = std::stoi(str.substr(0, str.find(',')));
+            sum += temp.Mark;
             Marks.push_back(temp);
-            for(auto& i : Marks){
-                sum += i.Mark;
-            }
             avg_mark = sum / double(Marks.size());
         }
 
@@ -91,16 +89,20 @@ void Journal::read_file(const std::string& file_name){
 }
 
 void Journal::print_journal(){
+    std::cout << "Journal:" << std::endl;
     for(auto& i : students){
-        std::cout << i.second.Number << " " << i.second.name << " ";
+        std::cout << i.second.Number << " | " << i.second.name << " | ";
         for(auto& j : i.second.Marks){
             std::cout << j.subject << " " << j.Mark << " ";
         }
-        std::cout << i.second.avg_mark << std::endl;
+        std::cout << "| " << i.second.avg_mark << std::endl;
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
-bool compare_vector(std::vector<std::string> a, std::vector<std::string> b){
+bool compare_vector_by_name(std::vector<std::string> a, std::vector<std::string> b){
     if(a[0] != b[0]){
         return a[0] < b[0];
     }
@@ -110,21 +112,25 @@ bool compare_vector(std::vector<std::string> a, std::vector<std::string> b){
 }
 
 void Journal::print_by_name(){
+    std::cout << "Students sorted by name:" << std::endl;
     std::vector <std::string> info;
     std::vector <std::vector<std::string> > vec;
     for(auto& i : students){
         info.push_back(i.second.name.substr(0, i.second.name.find(' ')));
         info.push_back(std::to_string(i.second.Number));
-        info.push_back(std::to_string(i.second.avg_mark));
+        info.push_back(std::to_string(i.second.avg_mark).substr(0, 4));
         vec.push_back(info);
         info.clear();
     }
-    std::sort(vec.begin(), vec.end(), compare_vector);
+    std::sort(vec.begin(), vec.end(), compare_vector_by_name);
     int count = 1;
     for(auto& i : vec){
-        std::cout << count << " " << i[0] << " " << i[1] << " " << i[2] << std::endl;
+        std::cout << count << ") " << i[0] << " | " << i[1] << " | " << i[2] << std::endl;
         count++;
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 bool compare_vec_by_avg_mark(std::vector<std::string> a, std::vector<std::string> b){
@@ -132,13 +138,14 @@ bool compare_vec_by_avg_mark(std::vector<std::string> a, std::vector<std::string
 }
 
 void Journal::print_by_avg_mark(const int& a, const int& b){
+    std::cout << "Students sorted by avg mark:" << std::endl;
     std::vector <std::string> info;
     std::vector <std::vector<std::string> > vec;
     for(auto& i : students){
         if(i.second.avg_mark >= a && i.second.avg_mark <= b){
             info.push_back(i.second.name);
             info.push_back(std::to_string(i.second.Number));
-            info.push_back(std::to_string(i.second.avg_mark));
+            info.push_back(std::to_string(i.second.avg_mark).substr(0, 4));
             vec.push_back(info);
             info.clear();
         }
@@ -146,23 +153,30 @@ void Journal::print_by_avg_mark(const int& a, const int& b){
     std::sort(vec.begin(), vec.end(), compare_vec_by_avg_mark);
     int count = 1;
     for(auto& i : vec){
-        std::cout << count << " " << i[0] << " " << i[1] << " " << i[2] << std::endl;
+        std::cout << count << ") " << i[0] << " | " << i[1] << " | " << i[2] << std::endl;
         count++;
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 void Journal::print_by_subject(const std::string& str){
-    std::cout << str << ":" << std::endl;
+    std::cout << "Students who took the subject " << str << " and their mark:" << std::endl;
     for(auto& i : students){
         for(auto& j : i.second.Marks){
             if(j.subject == str){
-                std::cout << i.second.Number << " " << i.second.name << " " << j.Mark << std::endl;
+                std::cout << i.second.Number << " | " << i.second.name << " | " << j.Mark << std::endl;
             }
         }
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 void Journal::number_of_students_by_subject(){
+    std::cout << "Number of students by subject:" << std::endl;
     std::map<std::string, int> subjects;
     for(auto& i : students){
         for(auto& j : i.second.Marks){
@@ -170,8 +184,11 @@ void Journal::number_of_students_by_subject(){
         }
     }
     for(auto& i : subjects){
-        std::cout << i.first << " " << i.second << std::endl;
+        std::cout << i.first << ": " << i.second << std::endl;
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 bool compare_vec_pair_by_avg_mark(const std::pair<std::string, double>& a, const std::pair<std::string, double>& b){
@@ -179,16 +196,17 @@ bool compare_vec_pair_by_avg_mark(const std::pair<std::string, double>& a, const
 }
 
 void Journal::avg_mark_by_subject(){
+    std::cout << "Avg mark by subject:" << std::endl;
     std::map<std::string, double> subjects;
-    std::map<std::string, int> avg;
+    std::map<std::string, int> num;
     for(auto& i : students){
         for(auto& j : i.second.Marks){
-            avg[j.subject]++;
+            num[j.subject]++;
         }
     }
     for(auto& i : students){
         for(auto& j : i.second.Marks){
-            subjects[j.subject] += j.Mark / double(avg[j.subject]);
+            subjects[j.subject] += j.Mark / double(num[j.subject]);
         }
     }
     std::vector <std::pair<std::string, double> > vec;
@@ -197,12 +215,15 @@ void Journal::avg_mark_by_subject(){
     }
     std::sort(vec.begin(), vec.end(), compare_vec_pair_by_avg_mark);
     for(auto& i : vec){
-        std::cout << i.first << " " << i.second << std::endl;
+        std::cout << i.first << " - " << i.second << std::endl;
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 void Journal::print_max_sum_marks(){
-    std::map<int, int> students_marks;
+    std::map<int, int> students_marks; // number, sum
     int max = 0;
     for(auto& i : students){
         int sum = 0;
@@ -214,48 +235,48 @@ void Journal::print_max_sum_marks(){
             max = sum;
         }
     }
-    std::cout << "Students ind num with max sum (" << max << ") of marks:" << std::endl;
+    std::cout << "Students with max sum (" << max << ") of marks:" << std::endl;
     for (auto& i : students_marks){
         if(i.second == max){
             auto it = students.find(i.first);
-            std::cout << it->second.Number << " " << it->second.name;
+            std::cout << it->second.Number << " | " << it->second.name << " | ";
             for(auto& j : it->second.Marks){
                 std::cout << j.subject << " " << j.Mark << " ";
             }
             std::cout << std::endl;
         }
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 void Journal::print_dissuasive_marks(){
+    std::cout << "Students with dissuasive marks:" << std::endl;
     for (auto& i : students){
         for(auto& j : i.second.Marks){
             if(j.Mark <= 3){
-                std::cout << i.second.Number << " " << i.second.name << " " << j.subject
+                std::cout << i.second.Number << " | " << i.second.name << " | " << j.subject
                 << " " << j.Mark << std::endl;
                 break;
             }
         }
     }
+    std::cout << std::endl;
+    std::cout << "-----------------------------------------------\n";
+    std::cout << std::endl;
 }
 
 int main() {
     Journal group11;
     group11.read_file();
     group11.print_journal();
-    std::cout << std::endl;
     group11.print_by_name();
-    std::cout << std::endl;
     group11.print_by_avg_mark(4, 10);
-    std::cout << std::endl;
     group11.print_by_subject("Math");
-    std::cout << std::endl;
     group11.number_of_students_by_subject();
-    std::cout << std::endl;
     group11.avg_mark_by_subject();
-    std::cout << std::endl;
     group11.print_max_sum_marks();
-    std::cout << std::endl;
     group11.print_dissuasive_marks();
     return 0;
 }
